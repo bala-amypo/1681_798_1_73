@@ -4,7 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 @Entity
-public class WorkflowTemplate{
+public class WorkflowStepConfig{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -49,9 +49,9 @@ public class WorkflowTemplate{
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
-    public user() {
+    public WorkflowStepConfig() {
     }
-    public user(Long id, Long templateId, Integer levelNumber, String approverRole, Boolean isFinalStep,
+    public WorkflowStepConfig(Long id, Long templateId, Integer levelNumber, String approverRole, Boolean isFinalStep,
             String instructions) {
         this.id = id;
         this.templateId = templateId;
