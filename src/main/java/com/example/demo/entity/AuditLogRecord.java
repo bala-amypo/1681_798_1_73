@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 @Entity
-public class WorkflowStepConfig{
+public class AuditLogRecord{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -43,9 +43,9 @@ public class WorkflowStepConfig{
     public void setLoggedAt(LocalDateTime loggedAt) {
         this.loggedAt = loggedAt;
     }
-    public user() {
+    public AuditLogRecord() {
     }
-    public user(Long id, Long requestId, String eventType, String details, LocalDateTime loggedAt) {
+    public AuditLogRecord(Long id, Long requestId, String eventType, String details, LocalDateTime loggedAt) {
         this.id = id;
         this.requestId = requestId;
         this.eventType = eventType;
