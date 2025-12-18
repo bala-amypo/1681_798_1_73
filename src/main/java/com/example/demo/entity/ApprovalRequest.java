@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 @Entity
-public class ApprovalAction{
+public class ApprovalRequest{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -64,9 +64,9 @@ public class ApprovalAction{
     public void setCreateAt(LocalDateTime createAt) {
         this.createAt = createAt;
     }
-    public user() {
+    public ApprovalRequest() {
     }
-    public user(Long id, Long templateId, Long requesterId, String requestTitle, String requestPayloadJson,
+    public ApprovalRequest(Long id, Long templateId, Long requesterId, String requestTitle, String requestPayloadJson,
             String status, Integer currentLevel, LocalDateTime createAt) {
         this.id = id;
         this.templateId = templateId;
