@@ -1,5 +1,4 @@
 package com.example.demo.entity;
-import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,9 +43,9 @@ public class WorkflowTemplate{
     public void setActive(Boolean active) {
         this.active = active;
     }
-    public user() {
+    public WorkflowTemplate() {
     }
-    public user(Long id, String templateName, String description, Integer totalLevels, Boolean active) {
+    public WorkflowTemplate(Long id, String templateName, String description, Integer totalLevels, Boolean active) {
         this.id = id;
         this.templateName = templateName;
         this.description = description;
