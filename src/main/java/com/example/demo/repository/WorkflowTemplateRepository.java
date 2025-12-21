@@ -1,9 +1,10 @@
 package com.example.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.example.demo.entity.WorkflowTemplate;
 
-public interface WorkflowTemplateRepository extends JpaRepository<WorkflowTemplate,Long>{
-    
+public interface WorkflowTemplateRepository
+        extends JpaRepository<WorkflowTemplate, Long> {
+
+    boolean existsByTemplateName(String templateName);
 }
