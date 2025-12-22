@@ -1,51 +1,48 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import org.springframework.stereotype.Service;
 import com.example.demo.entity.WorkflowTemplate;
 import com.example.demo.repository.WorkflowTemplateRepository;
 import com.example.demo.service.WorkflowTemplateService;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
+import java.lang.Long;
 
 @Service
 public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
 
-    private final WorkflowTemplateRepository templateRepo;
+    private final WorkflowTemplateRepository workflowTemplateRepository;
 
-    public WorkflowTemplateServiceImpl(WorkflowTemplateRepository templateRepo) {
-        this.templateRepo = templateRepo;
+    public WorkflowTemplateServiceImpl(WorkflowTemplateRepository workflowTemplateRepository) {
+        this.workflowTemplateRepository = workflowTemplateRepository;
     }
 
-    @Override
     public WorkflowTemplate createTemplate(WorkflowTemplate t) {
-        if (templateRepo.existsByTemplateName(t.getTemplateName())) {
-            throw new RuntimeException("Template name already exists");
+        if (t.getActive() == null) {
+            t.setActive(false);
         }
-        t.setActive(false);
-        return templateRepo.save(t);
+        return workflowTemplateRepository.save(t);
     }
 
-    @Override
     public Optional<WorkflowTemplate> getTemplateById(Long id) {
-        return templateRepo.findById(id);
+        return workflowTemplateRepository.findById(id);
     }
 
-    @Override
     public List<WorkflowTemplate> getAllTemplates() {
-        return templateRepo.findAll();
+        return workflowTemplateRepository.findAll();
     }
 
-    @Override
     public WorkflowTemplate updateTemplate(Long id, WorkflowTemplate t) {
-        WorkflowTemplate existing = templateRepo.findById(id).orElseThrow();
+        WorkflowTemplate existing = workflowTemplateRepository.findById(id).orElseThrow();
         existing.setTemplateName(t.getTemplateName());
-        return templateRepo.save(existing);
+        existing.setDescription(t.getDescription());
+        existing.setTotalLevels(t.getTotalLevels());
+        return workflowTemplateRepository.save(existing);
     }
 
-    @Override
     public WorkflowTemplate activateTemplate(Long id, boolean active) {
-        WorkflowTemplate template = templateRepo.findById(id).orElseThrow();
+        WorkflowTemplate template = workflowTemplateRepository.findById(id).orElseThrow();
         template.setActive(active);
-        return templateRepo.save(template);
+        return workflowTemplateRepository.save(template);
     }
 }
