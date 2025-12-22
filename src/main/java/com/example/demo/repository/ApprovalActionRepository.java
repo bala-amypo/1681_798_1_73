@@ -1,11 +1,12 @@
 package com.example.demo.repository;
 
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.example.demo.entity.ApprovalAction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.lang.Integer;
+import java.lang.String;
 
-public interface ApprovalActionRepository extends JpaRepository<ApprovalAction,Long> {
-    Optional<ApprovalAction>findByLevelAndAction(Integer levelNumber,String action);
+public interface ApprovalActionRepository extends JpaRepository<ApprovalAction, Long> {
+
+    List<ApprovalAction> findByLevelNumberAndAction(Integer levelNumber, String action);
 }
