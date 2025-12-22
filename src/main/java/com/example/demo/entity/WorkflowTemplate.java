@@ -8,7 +8,7 @@ import jakarta.persistence.Column;
 @Entity
 public class WorkflowTemplate{
     @Id
-    `@GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Column(unique=true)
     private String templateName;
