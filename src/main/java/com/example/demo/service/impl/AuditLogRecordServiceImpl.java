@@ -6,7 +6,7 @@ import com.example.demo.service.AuditLogService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuditLogServiceImpl implements AuditLogService {
+public class AuditLogRecordServiceImpl implements AuditLogRecordService {
 
     private final AuditLogRecordRepository auditLogRecordRepository;
 
