@@ -1,19 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.WorkflowTemplate;
-import java.util.List;
-import java.util.Optional;
-import java.lang.Long;
+import com.example.demo.entity.ApprovalAction;
 
-public interface WorkflowTemplateService {
+public interface ApprovalActionService {
 
-    WorkflowTemplate createTemplate(WorkflowTemplate t);
-
-    Optional<WorkflowTemplate> getTemplateById(Long id);
-
-    List<WorkflowTemplate> getAllTemplates();
-
-    WorkflowTemplate updateTemplate(Long id, WorkflowTemplate t);
-
-    WorkflowTemplate activateTemplate(Long id, boolean active);
+    ApprovalAction recordAction(ApprovalAction action);
 }
