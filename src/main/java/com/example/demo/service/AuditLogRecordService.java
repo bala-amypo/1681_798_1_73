@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.AuditLogRecord;
 
-public interface AuditLogService {
+public interface AuditLogRecordService {
 
     AuditLogRecord save(AuditLogRecord record);
 }
