@@ -1,21 +1,20 @@
 package com.example.demo.entity;
 
-import java.util.Set;
 import jakarta.persistence.*;
+import java.lang.Long;
+import java.lang.String;
 
 @Entity
-@Table(name="roles")
+@Table(name = "roles", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "name")
+})
 public class Role {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false, unique=true)
     private String name;
-
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
 
     public Long getId() {
         return id;
@@ -33,24 +32,11 @@ public class Role {
         this.name = name;
     }
 
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
     public Role() {
     }
 
-    public Role(String name) {
-        this.name = name;
-    }
-
-    public Role(Long id, String name, Set<User> users) {
+    public Role(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.users = users;
     }
 }

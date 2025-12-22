@@ -1,27 +1,29 @@
 package com.example.demo.entity;
+
+import jakarta.persistence.*;
+import java.lang.Long;
+import java.lang.String;
+import java.lang.Integer;
 import java.time.LocalDateTime;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
 
 @Entity
+@Table(name = "approval_actions")
 public class ApprovalAction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "request_id", nullable = false)
-    private ApprovalRequest approvalRequest;
+    private Long requestId;
 
     private Long approverId;
+
     private Integer levelNumber;
+
     private String action;
+
     private String comments;
+
     private LocalDateTime actionDate;
 
     public Long getId() {
@@ -32,12 +34,12 @@ public class ApprovalAction {
         this.id = id;
     }
 
-    public ApprovalRequest getApprovalRequest() {
-        return approvalRequest;
+    public Long getRequestId() {
+        return requestId;
     }
 
-    public void setApprovalRequest(ApprovalRequest approvalRequest) {
-        this.approvalRequest = approvalRequest;
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
     }
 
     public Long getApproverId() {
@@ -83,12 +85,9 @@ public class ApprovalAction {
     public ApprovalAction() {
     }
 
-    public ApprovalAction(Long id, ApprovalRequest approvalRequest,
-                          Long approverId, Integer levelNumber,
-                          String action, String comments,
-                          LocalDateTime actionDate) {
+    public ApprovalAction(Long id, Long requestId, Long approverId, Integer levelNumber, String action, String comments, LocalDateTime actionDate) {
         this.id = id;
-        this.approvalRequest = approvalRequest;
+        this.requestId = requestId;
         this.approverId = approverId;
         this.levelNumber = levelNumber;
         this.action = action;
