@@ -28,8 +28,7 @@ public class WorkflowTemplateController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WorkflowTemplate> updateTemplate(@PathVariable Long id,
-                                                           @RequestBody WorkflowTemplate template) {
+    public ResponseEntity<WorkflowTemplate> updateTemplate(@PathVariable Long id,  @RequestBody WorkflowTemplate template) {
         return ResponseEntity.ok(workflowTemplateService.updateTemplate(id, template));
     }
 
