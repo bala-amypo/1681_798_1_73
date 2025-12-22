@@ -1,37 +1,34 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.entity.ApprovalRequest;
 import com.example.demo.service.ApprovalRequestService;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import java.util.List;
+import java.lang.Long;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/requests")
 public class ApprovalRequestController {
 
-    @Autowired
-    private ApprovalRequestService approvalRequestService;
+    private final ApprovalRequestService approvalRequestService;
 
-    @PostMapping("/create")
-    public ApprovalRequest createRequest(
-            @RequestBody ApprovalRequest request) {
-
-        return approvalRequestService.createRequest(request);
+    public ApprovalRequestController(ApprovalRequestService approvalRequestService) {
+        this.approvalRequestService = approvalRequestService;
     }
 
-    @GetMapping("/getAll")
-    public List<ApprovalRequest> getAllRequests() {
-        return approvalRequestService.getAllRequests();
+    @PostMapping
+    public ResponseEntity<ApprovalRequest> createRequest(@RequestBody ApprovalRequest request) {
+        return ResponseEntity.ok(approvalRequestService.createRequest(request));
     }
 
-    @GetMapping("/getByUser/{userId}")
-    public List<ApprovalRequest> getRequestsByUser(
-            @PathVariable Long userId) {
+    @GetMapping
+    public ResponseEntity<List<ApprovalRequest>> getAllRequests(
+            @RequestParam(value = "requesterId", required = false) Long requesterId) {
 
-        return approvalRequestService.getRequestsByRequester(userId);
+        if (requesterId != null) {
+            return ResponseEntity.ok(approvalRequestService.getRequestsByRequester(requesterId));
+        }
+        return ResponseEntity.ok(approvalRequestService.getAllRequests());
     }
 }
