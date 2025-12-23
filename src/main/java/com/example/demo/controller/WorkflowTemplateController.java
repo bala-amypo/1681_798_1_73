@@ -24,8 +24,12 @@ public class WorkflowTemplateController {
 
     @GetMapping("/{id}")
     public ResponseEntity<WorkflowTemplate> getTemplateById(@PathVariable Long id) {
-        return ResponseEntity.ok(workflowTemplateService.getTemplateById(id));
-    }
+    WorkflowTemplate template =workflowTemplateService.getTemplateById(id)
+                    .orElseThrow(() -> new RuntimeException("Template not found"));
+
+    return ResponseEntity.ok(template);
+}
+
 
     @PutMapping("/{id}")
     public ResponseEntity<WorkflowTemplate> updateTemplate(@PathVariable Long id,
