@@ -21,25 +21,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Override
     public User registerUser(User user, String roleName) {
-
         Role role = roleRepository.findByName(roleName)
                 .orElseGet(() -> {
                     Role r = new Role();
                     r.setName(roleName);
                     return roleRepository.save(r);
                 });
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(role);
-
         return userRepository.save(user);
     }
 
-    @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow();
+                .orElseGet(() -> userRepository.findByEmail(username).orElseThrow());
     }
 }
