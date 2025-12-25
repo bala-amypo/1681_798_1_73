@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.AuditLogRecord;
-import com.example.demo.service.AuditLogRecordService;
+import com.example.demo.service.AuditLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
