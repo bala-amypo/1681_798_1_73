@@ -12,7 +12,7 @@ import java.util.List;
 public class AuditLogRecordController {
 
     @Autowired
-    private AuditLogRecordService auditLogService;
+    private AuditLogService auditLogService;
 
     @PostMapping
     public AuditLogRecord save(@RequestBody AuditLogRecord record) {
