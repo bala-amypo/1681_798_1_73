@@ -6,36 +6,38 @@ import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
 
-    private final String jwtSecret = "demoSecretKey123456";
+    private final String jwtSecret = "testSecretKey";
     private final long jwtExpirationMs = 3600000;
 
     public String generateToken(User user) {
+
+        List<String> roles = user.getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("userId", user.getId())
                 .claim("email", user.getEmail())
-                .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-        return claims.get("userId", Long.class);
-    }
-
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
+        } catch (JwtException e) {
             return false;
         }
     }
