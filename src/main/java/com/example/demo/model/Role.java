@@ -21,7 +21,7 @@ public class Role {
     public Set<User> getUsers() { return users; }
 
     public void setName(String name) { this.name = name; }
-}
+
 
     public Role() {}
 
