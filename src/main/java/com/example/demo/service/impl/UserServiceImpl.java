@@ -5,36 +5,55 @@ import com.example.demo.model.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    public UserServiceImpl(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder) {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    public User registerUser(User user, String roleName) {
+    @Override
+    public User register(User user, String roleName) {
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         Role role = roleRepository.findByName(roleName)
                 .orElseGet(() -> {
                     Role r = new Role();
                     r.setName(roleName);
                     return roleRepository.save(r);
                 });
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(role);
+
+        user.setRoles(Collections.singleton(role));
         return userRepository.save(user);
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseGet(() -> userRepository.findByEmail(username).orElseThrow());
+    @Override
+    public User login(String usernameOrEmail, String rawPassword) {
+
+        User user = userRepository
+                .findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+                .orElseThrow();
+
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return user;
     }
 }
