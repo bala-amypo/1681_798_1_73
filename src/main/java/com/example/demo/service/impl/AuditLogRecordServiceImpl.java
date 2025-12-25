@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AuditLogServiceImpl implements AuditLogService {
+public class AuditLogRecordServiceImpl implements AuditLogService {
 
     @Autowired
     private AuditLogRecordRepository auditLogRecordRepository;
