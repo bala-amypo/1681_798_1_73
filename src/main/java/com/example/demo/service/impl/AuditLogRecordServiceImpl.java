@@ -2,14 +2,14 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.AuditLogRecord;
 import com.example.demo.repository.AuditLogRecordRepository;
-import com.example.demo.service.AuditLogService;
+import com.example.demo.service.AuditLogRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class AuditLogRecordServiceImpl implements AuditLogService {
+public class AuditLogRecordServiceImpl implements AuditLogRecordService {
 
     @Autowired
     private AuditLogRecordRepository auditLogRecordRepository;
