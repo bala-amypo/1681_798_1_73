@@ -31,7 +31,7 @@ public class WorkflowTemplate {
     }
 
     public String setDescription() {
-        this.description=description;
+        this.description = description;
     }
 
     public int getTotalLevels() {
