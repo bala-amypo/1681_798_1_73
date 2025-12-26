@@ -13,30 +13,25 @@ import java.util.Optional;
 public class WorkflowTemplateController {
 
     @Autowired
-    private WorkflowTemplateService workflowTemplateService;
+    private WorkflowTemplateService templateService;
 
-    @PostMapping
-    public WorkflowTemplate create(@RequestBody WorkflowTemplate template) {
-        return workflowTemplateService.createTemplate(template);
+    @PostMapping("/")
+    public WorkflowTemplate createTemplate(@RequestBody WorkflowTemplate template) {
+        return templateService.createTemplate(template);
     }
 
     @GetMapping("/{id}")
-    public Optional<WorkflowTemplate> getById(@PathVariable Long id) {
-        return workflowTemplateService.getTemplateById(id);
+    public Optional<WorkflowTemplate> getTemplate(@PathVariable Long id) {
+        return templateService.getTemplateById(id);
     }
 
     @PutMapping("/{id}")
-    public WorkflowTemplate update(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
-        return workflowTemplateService.updateTemplate(id, template);
+    public WorkflowTemplate updateTemplate(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
+        return templateService.updateTemplate(id, template);
     }
 
-    @PutMapping("/{id}/activate")
-    public WorkflowTemplate activate(@PathVariable Long id, @RequestParam boolean active) {
-        return workflowTemplateService.activateTemplate(id, active);
-    }
-
-    @GetMapping
-    public List<WorkflowTemplate> getAll() {
-        return workflowTemplateService.getAllTemplates();
+    @GetMapping("/")
+    public List<WorkflowTemplate> getAllTemplates() {
+        return templateService.getAllTemplates();
     }
 }
