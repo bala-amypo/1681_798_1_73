@@ -13,7 +13,7 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
     private final List<WorkflowTemplate> templates = new ArrayList<>();
 
     @Override
-    public WorkflowTemplate create(WorkflowTemplate template) {
+    public WorkflowTemplate createTemplate(WorkflowTemplate template) {
         templates.add(template);
         return template;
     }
