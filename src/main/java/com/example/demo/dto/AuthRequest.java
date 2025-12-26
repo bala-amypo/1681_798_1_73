@@ -29,7 +29,7 @@ public class AuthRequest {
         this.password = password;
     }
     public void setUsernameOrEmail(String value) {
-    this.username = value;
+         this.username = value;
     }
 
 }
