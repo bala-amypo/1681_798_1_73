@@ -1,39 +1,33 @@
 package com.example.demo.controller;
 
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.UnauthorizedException;
 import com.example.demo.model.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    public AuthController(UserService userService, JwtTokenProvider tokenProvider) {
+        this.userService = userService;
+        this.tokenProvider = tokenProvider;
+    }
 
     @PostMapping("/login")
     public String login(@RequestParam String usernameOrEmail, @RequestParam String password) {
+        User user = usernameOrEmail.contains("@")
+                ? userService.findByEmail(usernameOrEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"))
+                : userService.findByUsername(usernameOrEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        User user;
-        if (usernameOrEmail.contains("@")) {
-            user = userService.findByEmail(usernameOrEmail);
-        } else {
-            user = userService.findByUsername(usernameOrEmail);
-        }
+        if (!user.getPassword().equals(password)) throw new UnauthorizedException("Invalid credentials");
 
-        if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        return tokenProvider.generateToken(
-                user.getId(),
-                user.getEmail(),
-                user.getRoles().stream().map(r -> r.getName()).toList()
-        );
+        return tokenProvider.generateToken(user.getId(), user.getEmail(),
+                user.getRoles().stream().map(r -> r.getName()).toList());
     }
 }
