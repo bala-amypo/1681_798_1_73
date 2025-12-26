@@ -12,11 +12,20 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public User registerUser(User user, String rawPassword) {
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        return userRepository.save(user);
+    }
 
     @Override
     public Optional<User> getByUsernameOrEmail(String usernameOrEmail) {
@@ -26,12 +35,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkPassword(User user, String rawPassword) {
         return passwordEncoder.matches(rawPassword, user.getPassword());
-    }
-
-    @Override
-    public User registerUser(User user, String rawPassword) {
-        String encodedPassword = passwordEncoder.encode(rawPassword);
-        user.setPassword(encodedPassword);
-        return userRepository.save(user);
     }
 }
