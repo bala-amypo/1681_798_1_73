@@ -1,46 +1,32 @@
 package com.example.demo.security;
 
+import com.example.demo.model.User;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
-
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
-    @Value("${jwt.expiration-ms}")
-    private long jwtExpirationInMs;
-
-    public String generateToken(String username) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
-
+    public String generateToken(User user) {
+        String roles = user.getRoles().stream().map(r -> r.getName()).collect(Collectors.joining(","));
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .setSubject(user.getId()+"")
+                .claim("username", user.getUsername())
+                .claim("email", user.getEmail())
+                .claim("roles", roles)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis()+SecurityConstants.EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET_KEY)
                 .compact();
     }
-
-    public String getUsername(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+    public Long getUserIdFromToken(String token) {
+        return Long.parseLong(Jwts.parser().setSigningKey(SecurityConstants.SECRET_KEY).parseClaimsJws(token).getBody().getSubject());
     }
-
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(SecurityConstants.SECRET_KEY).parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException ex) {
-            return false;
-        }
+        } catch(Exception e) { return false; }
     }
 }
