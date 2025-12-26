@@ -2,26 +2,45 @@ package com.example.demo.controller;
 
 import com.example.demo.model.WorkflowTemplate;
 import com.example.demo.service.WorkflowTemplateService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/workflow/templates")
+@RequestMapping("/api/templates")
 public class WorkflowTemplateController {
 
-    private final WorkflowTemplateService service;
+    @Autowired
+    private WorkflowTemplateService service;
 
-    public WorkflowTemplateController(WorkflowTemplateService service) {
-        this.service = service;
-    }
-
+    // Create a template
     @PostMapping
-    public WorkflowTemplate create(@RequestBody WorkflowTemplate template) {
-        return service.create(template);
+    public WorkflowTemplate createTemplate(@RequestBody WorkflowTemplate template) {
+        return service.create(template);   // matches service.create()
     }
 
+    // Get all templates
     @GetMapping
-    public List<WorkflowTemplate> getAll() {
-        return service.getAll();
+    public List<WorkflowTemplate> getAllTemplates() {
+        return service.getAll();           // matches service.getAll()
+    }
+
+    // Optional: get by ID
+    @GetMapping("/{id}")
+    public WorkflowTemplate getTemplateById(@PathVariable Long id) {
+        return service.getTemplateById(id);
+    }
+
+    // Optional: update template
+    @PutMapping("/{id}")
+    public WorkflowTemplate updateTemplate(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
+        return service.updateTemplate(id, template);
+    }
+
+    // Optional: activate/deactivate
+    @PatchMapping("/{id}/activate")
+    public WorkflowTemplate activateTemplate(@PathVariable Long id, @RequestParam boolean active) {
+        return service.activateTemplate(id, active);
     }
 }
