@@ -30,7 +30,7 @@ public class WorkflowTemplate {
         return description;
     }
 
-    public String setDescription() {
+    public void setDescription(String description) {
         this.description = description;
     }
 
