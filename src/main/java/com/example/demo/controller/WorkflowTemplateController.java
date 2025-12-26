@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.WorkflowTemplate;
 import com.example.demo.service.WorkflowTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,33 +15,37 @@ public class WorkflowTemplateController {
     @Autowired
     private WorkflowTemplateService service;
 
-    // Create a template
-    @PostMapping
-    public WorkflowTemplate createTemplate(@RequestBody WorkflowTemplate template) {
-        return service.create(template);   // matches service.create()
+    @PostMapping("/create")
+    public ResponseEntity<WorkflowTemplate> create(@RequestBody WorkflowTemplate template) {
+        WorkflowTemplate created = service.create(template);
+        return ResponseEntity.ok(created);
     }
 
-    // Get all templates
-    @GetMapping
-    public List<WorkflowTemplate> getAllTemplates() {
-        return service.getAll();           // matches service.getAll()
+    @GetMapping("/all")
+    public ResponseEntity<List<WorkflowTemplate>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
-    // Optional: get by ID
     @GetMapping("/{id}")
-    public WorkflowTemplate getTemplateById(@PathVariable Long id) {
-        return service.getTemplateById(id);
+    public ResponseEntity<WorkflowTemplate> getById(@PathVariable Long id) {
+        WorkflowTemplate template = service.getTemplateById(id);
+        if (template != null) {
+            return ResponseEntity.ok(template);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    // Optional: update template
-    @PutMapping("/{id}")
-    public WorkflowTemplate updateTemplate(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
-        return service.updateTemplate(id, template);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<WorkflowTemplate> update(@PathVariable Long id,
+                                                   @RequestBody WorkflowTemplate template) {
+        WorkflowTemplate updated = service.updateTemplate(id, template);
+        return ResponseEntity.ok(updated);
     }
 
-    // Optional: activate/deactivate
-    @PatchMapping("/{id}/activate")
-    public WorkflowTemplate activateTemplate(@PathVariable Long id, @RequestParam boolean active) {
-        return service.activateTemplate(id, active);
+    @PatchMapping("/activate/{id}")
+    public ResponseEntity<String> activate(@PathVariable Long id,
+                                           @RequestParam boolean active) {
+        service.activateTemplate(id, active);
+        return ResponseEntity.ok("Template " + (active ? "activated" : "deactivated"));
     }
 }
