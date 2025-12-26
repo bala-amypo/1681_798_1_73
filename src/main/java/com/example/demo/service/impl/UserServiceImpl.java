@@ -4,32 +4,23 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final List<User> users = new ArrayList<>();
-    private Long nextId = 1L;
+    private final Map<String, User> users = new HashMap<>();
 
     @Override
-    public User createUser(User user) {
-        user.setId(nextId++);
-        users.add(user);
+    public User registerUser(User user, String password) {
+        user.setPassword(password);
+        users.put(user.getUsername(), user);
         return user;
     }
 
     @Override
-    public Optional<User> getByUsernameOrEmail(String usernameOrEmail) {
-        return users.stream()
-                .filter(u -> u.getUsername().equals(usernameOrEmail) || u.getEmail().equals(usernameOrEmail))
-                .findFirst();
-    }
-
-    @Override
-    public boolean checkPassword(User user, String rawPassword) {
-        return user.getPassword().equals(rawPassword);
+    public User findByUsername(String username) {
+        return users.get(username);
     }
 }
