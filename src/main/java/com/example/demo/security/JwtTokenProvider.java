@@ -12,10 +12,10 @@ public class JwtTokenProvider {
     private final String SECRET_KEY = "your_secret_key_here";
     private final long EXPIRATION_MS = 86400000; // 1 day
 
-    // Generate token from User object
+    // Generate JWT token for a given User
     public String generateToken(User user) {
         return Jwts.builder()
-                .setSubject(user.getUsername())  // you can also use email if you prefer
+                .setSubject(user.getUsername())  // or user.getEmail()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
