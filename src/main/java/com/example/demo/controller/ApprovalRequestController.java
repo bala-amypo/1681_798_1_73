@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ApprovalRequest;
 import com.example.demo.service.ApprovalRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,19 +10,24 @@ import java.util.List;
 @RequestMapping("/api/requests")
 public class ApprovalRequestController {
 
-    @Autowired
-    private ApprovalRequestService requestService;
+    private final ApprovalRequestService approvalRequestService;
 
-    @PostMapping("/")
-    public ApprovalRequest createRequest(@RequestBody ApprovalRequest request) {
-        return requestService.createRequest(request);
+    public ApprovalRequestController(ApprovalRequestService approvalRequestService) {
+        this.approvalRequestService = approvalRequestService;
     }
 
-    @GetMapping("/")
-    public List<ApprovalRequest> getAllRequests(@RequestParam(required = false) Long requesterId) {
+    @PostMapping
+    public ApprovalRequest createRequest(@RequestBody ApprovalRequest request) {
+        return approvalRequestService.createRequest(request);
+    }
+
+    @GetMapping
+    public List<ApprovalRequest> getRequests(
+            @RequestParam(required = false) Long requesterId
+    ) {
         if (requesterId != null) {
-            return requestService.getRequestsByRequester(requesterId);
+            return approvalRequestService.getRequestsByRequester(requesterId);
         }
-        return requestService.getAllRequests();
+        return approvalRequestService.getAllRequests();
     }
 }
