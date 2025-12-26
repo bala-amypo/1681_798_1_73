@@ -22,12 +22,14 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
     public List<WorkflowTemplate> getAll() {
         return templates;
     }
+
     @Override
     public WorkflowTemplate getTemplateById(Long id) {
-         return templateRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Template not found with id: " + id));
+        return templates.stream()
+                .filter(t -> t.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Template not found with id: " + id));
     }
-
 
     @Override
     public WorkflowTemplate updateTemplate(Long id, WorkflowTemplate updated) {
@@ -40,7 +42,7 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
                 return t;
             }
         }
-        return null;
+        throw new RuntimeException("Template not found with id: " + id);
     }
 
     @Override
@@ -51,6 +53,6 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
                 return t;
             }
         }
-        return null;
+        throw new RuntimeException("Template not found with id: " + id);
     }
 }
