@@ -1,33 +1,35 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.User;
-import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserRepository userRepository;
 
-    @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return userService.createUser(user);
+    public AuthController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User loginRequest) {
-        Optional<User> optionalUser = userService.getByUsernameOrEmail(loginRequest.getUsername());
-        User user = optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (userService.checkPassword(user, loginRequest.getPassword())) {
-            return "Login successful for user: " + user.getUsername();
-        } else {
-            throw new RuntimeException("Invalid password");
+    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
+        Optional<User> userOpt = userRepository.findByUsername(username);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("User not found");
         }
+
+        User user = userOpt.get();
+        if (!user.getPassword().equals(password)) {
+            return ResponseEntity.status(401).body("Invalid password");
+        }
+
+        return ResponseEntity.ok("Login successful");
     }
+
 }
