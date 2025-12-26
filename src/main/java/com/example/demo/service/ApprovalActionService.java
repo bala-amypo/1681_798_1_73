@@ -9,6 +9,5 @@ public interface ApprovalActionService {
 
     List<ApprovalAction> getByLevelAndAction(Integer level, String action);
 
-    // ✅ ADD THIS
     List<ApprovalAction> getByRequestId(Long requestId);
 }
