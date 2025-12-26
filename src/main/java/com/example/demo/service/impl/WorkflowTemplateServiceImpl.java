@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
@@ -24,26 +25,29 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
     }
 
     @Override
-    public WorkflowTemplate getTemplateById(Long id) {
+    public Optional<WorkflowTemplate> getTemplateById(Long id) {
         return templates.stream()
                 .filter(t -> t.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Template not found with id: " + id));
+                .findFirst();
     }
 
     @Override
     public WorkflowTemplate updateTemplate(Long id, WorkflowTemplate updated) {
-        WorkflowTemplate template = getTemplateById(id);
+        WorkflowTemplate template = getTemplateById(id)
+                .orElseThrow(() -> new RuntimeException("Template not found"));
+
         template.setTemplateName(updated.getTemplateName());
-        template.setTotalLevels(updated.getTotalLevels());
         template.setDescription(updated.getDescription());
+        template.setTotalLevels(updated.getTotalLevels());
         template.setActive(updated.isActive());
         return template;
     }
 
     @Override
     public WorkflowTemplate activateTemplate(Long id, boolean active) {
-        WorkflowTemplate template = getTemplateById(id);
+        WorkflowTemplate template = getTemplateById(id)
+                .orElseThrow(() -> new RuntimeException("Template not found"));
+
         template.setActive(active);
         return template;
     }

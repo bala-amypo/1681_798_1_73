@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.WorkflowTemplate;
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkflowTemplateService {
 
@@ -9,7 +10,7 @@ public interface WorkflowTemplateService {
 
     List<WorkflowTemplate> getAllTemplates();
 
-    WorkflowTemplate getTemplateById(Long id);
+    Optional<WorkflowTemplate> getTemplateById(Long id);
 
     WorkflowTemplate updateTemplate(Long id, WorkflowTemplate template);
 
