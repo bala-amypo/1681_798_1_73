@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -18,10 +16,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String usernameOrEmail,
                                         @RequestParam String password) {
-        Optional<User> userOpt = userService.getByUsernameOrEmail(usernameOrEmail);
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
+        User user = userService.getByUsernameOrEmail(usernameOrEmail); // returns User, not Optional
+
+        if (user != null) {
             if (userService.checkPassword(user, password)) {
                 return ResponseEntity.ok("Login successful!");
             } else {
@@ -30,11 +28,5 @@ public class AuthController {
         } else {
             return ResponseEntity.status(404).body("User not found");
         }
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        User created = userService.createUser(user);
-        return ResponseEntity.ok("User registered with ID: " + created.getId());
     }
 }
