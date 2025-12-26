@@ -4,7 +4,11 @@ import com.example.demo.model.User;
 
 public interface UserService {
 
-    User findByUsername(String username);
+    User getByUsernameOrEmail(String usernameOrEmail);
+
+    boolean checkPassword(User user, String rawPassword);
 
     User createUser(User user);
+
+    User findByUsername(String username);
 }

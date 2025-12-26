@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
@@ -14,21 +13,38 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
     private final List<WorkflowTemplate> templates = new ArrayList<>();
 
     @Override
-    public WorkflowTemplate createTemplate(WorkflowTemplate template) {
+    public WorkflowTemplate create(WorkflowTemplate template) {
         templates.add(template);
         return template;
     }
 
     @Override
-    public List<WorkflowTemplate> getAllTemplates() {
+    public List<WorkflowTemplate> getAll() {
         return templates;
     }
 
     @Override
-    public WorkflowTemplate getTemplateById(Long id) {
-        Optional<WorkflowTemplate> template = templates.stream()
-                .filter(t -> t.getId().equals(id))
-                .findFirst();
-        return template.orElseThrow(() -> new RuntimeException("Template not found with id: " + id));
+    public WorkflowTemplate updateTemplate(Long id, WorkflowTemplate updated) {
+        for (WorkflowTemplate t : templates) {
+            if (t.getId().equals(id)) {
+                t.setTemplateName(updated.getTemplateName());
+                t.setTotalLevels(updated.getTotalLevels());
+                t.setDescription(updated.getDescription());
+                t.setActive(updated.getActive());
+                return t;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public WorkflowTemplate activateTemplate(Long id, boolean active) {
+        for (WorkflowTemplate t : templates) {
+            if (t.getId().equals(id)) {
+                t.setActive(active);
+                return t;
+            }
+        }
+        return null;
     }
 }
