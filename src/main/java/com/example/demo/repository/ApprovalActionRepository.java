@@ -12,7 +12,6 @@ public interface ApprovalActionRepository extends JpaRepository<ApprovalAction, 
 
     List<ApprovalAction> findByLevelAndAction(Integer level, String action);
 
-    // ✅ REQUIRED
     List<ApprovalAction> findByRequestId(Long requestId);
 }
 
