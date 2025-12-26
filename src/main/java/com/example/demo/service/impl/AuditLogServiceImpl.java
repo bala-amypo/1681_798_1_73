@@ -4,25 +4,20 @@ import com.example.demo.model.AuditLogRecord;
 import com.example.demo.repository.AuditLogRecordRepository;
 import com.example.demo.service.AuditLogService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class AuditLogServiceImpl implements AuditLogService {
 
-    private final AuditLogRecordRepository repository;
+    private final AuditLogRecordRepository auditRepository;
 
-    public AuditLogServiceImpl(AuditLogRecordRepository repository) {
-        this.repository = repository;
+    public AuditLogServiceImpl(AuditLogRecordRepository auditRepository) {
+        this.auditRepository = auditRepository;
     }
 
     @Override
-    public AuditLogRecord save(AuditLogRecord record) {
-        return repository.save(record);
-    }
-
-    @Override
-    public List<AuditLogRecord> findByRequestId(Long requestId) {
-        return repository.findByRequestId(requestId);
+    public AuditLogRecord recordLog(AuditLogRecord log) {
+        return auditRepository.save(log);
     }
 }
