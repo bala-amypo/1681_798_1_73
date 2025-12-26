@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ApprovalRequest;
 import com.example.demo.service.ApprovalRequestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,19 +11,24 @@ import java.util.List;
 @RequestMapping("/api/requests")
 public class ApprovalRequestController {
 
-    private final ApprovalRequestService service;
+    @Autowired
+    private ApprovalRequestService service;
 
-    public ApprovalRequestController(ApprovalRequestService service) {
-        this.service = service;
-    }
-
+    // Create a request
     @PostMapping
-    public ApprovalRequest create(@RequestBody ApprovalRequest request) {
-        return service.createRequest(request); // ✅ FIXED
+    public ApprovalRequest createRequest(@RequestBody ApprovalRequest request) {
+        return service.create(request);       // matches service.create()
     }
 
+    // Get requests by requester
     @GetMapping("/requester/{id}")
-    public List<ApprovalRequest> getByRequester(@PathVariable Long id) {
-        return service.getRequestsByRequester(id); // ✅ FIXED
+    public List<ApprovalRequest> getRequestsByRequester(@PathVariable Long id) {
+        return service.getByRequester(id);    // matches service.getByRequester()
+    }
+
+    // Get all requests
+    @GetMapping
+    public List<ApprovalRequest> getAllRequests() {
+        return service.getAllRequests();      // matches service.getAllRequests()
     }
 }
