@@ -14,7 +14,7 @@ public class ApprovalRequestServiceImpl implements ApprovalRequestService {
     private ApprovalRequestRepository repository;
 
     @Override
-    public ApprovalRequest create(ApprovalRequest request) {
+    public ApprovalRequest createRequest(ApprovalRequest request) {
         return repository.save(request);
     }
 
