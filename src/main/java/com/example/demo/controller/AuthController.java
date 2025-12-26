@@ -1,11 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.User;
-import com.example.demo.service.UserService;
 import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,23 +17,15 @@ public class AuthController {
     private JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public String login(@RequestParam String email) {
-        User user = userService.findByEmail(email);
-        if (user == null) return "Invalid credentials";
+    public String login(@RequestParam String usernameOrEmail, @RequestParam String password) {
+        User user = userService.findByUsername(usernameOrEmail)
+                        .orElse(userService.findByEmail(usernameOrEmail)
+                        .orElseThrow(() -> new RuntimeException("User not found")));
 
-        return tokenProvider.generateToken(
-                user.getId(),
-                user.getEmail(),
-                user.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList())
-        );
-    }
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("Invalid credentials");
+        }
 
-    @PostMapping("/register")
-    public User register(@RequestParam String username,
-                         @RequestParam String email,
-                         @RequestParam String password,
-                         @RequestParam String roleName) {
-        User user = new User(username, email, password, null);
-        return userService.registerUser(user, roleName);
+        return tokenProvider.generateToken(user.getId(), user.getEmail(), user.getRoles().stream().map(r -> r.getName()).toList());
     }
 }
