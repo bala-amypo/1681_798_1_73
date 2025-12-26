@@ -15,7 +15,6 @@ public class JwtTokenProvider {
 
     private static final String SECRET = "mysecretkeymysecretkeymysecretkey";
     private static final long EXPIRATION = 86400000;
-
     private final Key key;
 
     public JwtTokenProvider() {
@@ -41,7 +40,6 @@ public class JwtTokenProvider {
                 .stream()
                 .map(Role::getName)
                 .toList();
-
         return generateToken(user.getId(), user.getEmail(), roles);
     }
 
@@ -55,15 +53,5 @@ public class JwtTokenProvider {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
-    }
-
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.get("userId", Long.class);
     }
 }
