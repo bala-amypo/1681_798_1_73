@@ -13,13 +13,13 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
     private final List<WorkflowTemplate> templates = new ArrayList<>();
 
     @Override
-    public WorkflowTemplate createTemplate(WorkflowTemplate template) {
+    public WorkflowTemplate create(WorkflowTemplate template) {
         templates.add(template);
         return template;
     }
 
     @Override
-    public List<WorkflowTemplate> getAllTemplates() {
+    public List<WorkflowTemplate> getAll() {
         return templates;
     }
 
@@ -33,26 +33,18 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
 
     @Override
     public WorkflowTemplate updateTemplate(Long id, WorkflowTemplate updated) {
-        for (WorkflowTemplate t : templates) {
-            if (t.getId().equals(id)) {
-                t.setTemplateName(updated.getTemplateName());
-                t.setTotalLevels(updated.getTotalLevels());
-                t.setDescription(updated.getDescription());
-                t.setActive(updated.getActive());
-                return t;
-            }
-        }
-        return null;
+        WorkflowTemplate template = getTemplateById(id);
+        template.setTemplateName(updated.getTemplateName());
+        template.setTotalLevels(updated.getTotalLevels());
+        template.setDescription(updated.getDescription());
+        template.setActive(updated.isActive());
+        return template;
     }
 
     @Override
     public WorkflowTemplate activateTemplate(Long id, boolean active) {
-        for (WorkflowTemplate t : templates) {
-            if (t.getId().equals(id)) {
-                t.setActive(active);
-                return t;
-            }
-        }
-        return null;
+        WorkflowTemplate template = getTemplateById(id);
+        template.setActive(active);
+        return template;
     }
 }
