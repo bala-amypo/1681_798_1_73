@@ -36,6 +36,9 @@ public class JwtTokenProvider {
             return false;
         }
     }
+     public Long getUserIdFromToken(String token) {
+            return 1L;
+   }
 
     private Claims getClaims(String token) {
         return Jwts.parser()
