@@ -61,7 +61,7 @@ public class WorkflowTemplate {
         this.description = description;
     }
 
-    public boolean isActive() {
+    public boolean getActive() {
         return active;
     }
 
