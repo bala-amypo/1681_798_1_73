@@ -1,6 +1,6 @@
 package com.example.demo.security;
 
-import com.example.demo.model.User;
+import com.example.demo.service.impl.CustomUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,12 +12,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 /**
- * Minimal JWT filter that integrates with CustomUserDetailsService.
- * You can expand the validateToken() method later with actual JWT logic.
+ * JWT filter for authenticating requests.
+ * Skips /auth/login and /auth/register endpoints.
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -37,15 +36,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String path = request.getServletPath();
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+        // Skip login and register endpoints
+        if (path.startsWith("/auth/login") || path.startsWith("/auth/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            // Minimal placeholder: validateToken() should return true for now
-            if (tokenProvider != null && tokenProvider.validateToken(token)) {
-                String username = tokenProvider.getUsernameFromToken(token);
+        try {
+            String header = request.getHeader("Authorization");
+            String username = null;
+            String token = null;
 
+            if (header != null && header.startsWith("Bearer ")) {
+                token = header.substring(7);
+                if (tokenProvider.validateToken(token)) {
+                    username = tokenProvider.getUsernameFromToken(token);
+                }
+            }
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken authentication =
@@ -61,6 +72,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+
+        } catch (Exception e) {
+            // Log the exception but don’t block the request; security context will be empty
+            logger.error("Cannot set user authentication: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
