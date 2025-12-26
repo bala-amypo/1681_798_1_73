@@ -7,6 +7,10 @@ import jakarta.persistence.criteria.Root;
 import java.util.List;
 
 public class HibernateQueryUtil {
+    
+    public static List<?> findActionsByApproverUsingCriteria(Long approverId) {
+          return List.of();
+   }
 
     private HibernateQueryUtil() {
     }
