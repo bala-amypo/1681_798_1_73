@@ -13,7 +13,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     public AuditLogServiceImpl(AuditLogRecordRepository repository) {
         this.repository = repository;
     }
-
+    @Override
     public List<AuditLogRecord> getByRequest(Long requestId) {
         return repository.findByRequestId(requestId);
     }
