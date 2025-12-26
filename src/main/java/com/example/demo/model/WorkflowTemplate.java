@@ -8,38 +8,64 @@ public class WorkflowTemplate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
+
+    @Column(nullable = false)
     private String templateName;
+
     private int totalLevels;
+
     private String description;
+
     private boolean active;
 
     public WorkflowTemplate() {}
 
-    public WorkflowTemplate(Long id, String templateName, int totalLevels, String description, boolean active) {
-        this.id = id;
+    public WorkflowTemplate(String templateName, int totalLevels, String description, boolean active) {
         this.templateName = templateName;
         this.totalLevels = totalLevels;
         this.description = description;
         this.active = active;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-    public String getTemplateName() { return templateName; }
-    public void setTemplateName(String templateName) { this.templateName = templateName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public int getTotalLevels() { return totalLevels; }
-    public void setTotalLevels(int totalLevels) { this.totalLevels = totalLevels; }
+    public String getTemplateName() {
+        return templateName;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
 
-    public boolean getActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public int getTotalLevels() {
+        return totalLevels;
+    }
+
+    public void setTotalLevels(int totalLevels) {
+        this.totalLevels = totalLevels;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }
-
-
-
