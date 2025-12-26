@@ -15,12 +15,12 @@ public class WorkflowTemplateController {
     private WorkflowTemplateService service;
 
     @PostMapping("/create")
-    public WorkflowTemplate create(@RequestBody WorkflowTemplate template) {
+    public WorkflowTemplate createTemplate(@RequestBody WorkflowTemplate template) {
         return service.create(template);
     }
 
     @GetMapping("/all")
-    public List<WorkflowTemplate> getAll() {
+    public List<WorkflowTemplate> getAllTemplates() {
         return service.getAll();
     }
 

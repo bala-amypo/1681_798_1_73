@@ -19,7 +19,7 @@ public class ApprovalRequestServiceImpl implements ApprovalRequestService {
     }
 
     @Override
-    public List<ApprovalRequest> getByRequester(Long requesterId) {
+    public List<ApprovalRequest> getRequestsByRequester(Long requesterId) {
         return repository.findByRequesterId(requesterId);
     }
 

@@ -19,7 +19,7 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
     }
 
     @Override
-    public List<WorkflowTemplate> getAll() {
+    public List<WorkflowTemplate> getAllTemplates() {
         return templates;
     }
 
