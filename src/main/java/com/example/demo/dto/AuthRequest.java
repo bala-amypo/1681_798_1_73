@@ -5,6 +5,8 @@ public class AuthRequest {
     private String usernameOrEmail;
     private String password;
 
+    public AuthRequest() {}
+
     public String getUsernameOrEmail() {
         return usernameOrEmail;
     }
@@ -18,14 +20,6 @@ public class AuthRequest {
     }
 
     public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public AuthRequest() {
-    }
-
-    public AuthRequest(String usernameOrEmail, String password) {
-        this.usernameOrEmail = usernameOrEmail;
         this.password = password;
     }
 }
