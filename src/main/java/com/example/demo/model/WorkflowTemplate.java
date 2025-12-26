@@ -8,17 +8,23 @@ public class WorkflowTemplate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-
     private String templateName;
-
     private int totalLevels;
-
     private String description;
-
     private boolean active;
 
-    // Getters and Setters
+    public WorkflowTemplate() {}
+
+    public WorkflowTemplate(Long id, String templateName, int totalLevels, String description, boolean active) {
+        this.id = id;
+        this.templateName = templateName;
+        this.totalLevels = totalLevels;
+        this.description = description;
+        this.active = active;
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -31,19 +37,9 @@ public class WorkflowTemplate {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public boolean isActive() { return active; }
+    public boolean getActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+}
 
-
-
-    public WorkflowTemplate() {}
-
-    public WorkflowTemplate(Long id, String templateName, int totalLevels, String description, boolean active) {
-        this.id = id;
-        this.templateName = templateName;
-        this.totalLevels = totalLevels;
-        this.description = description;
-        this.active = active;
-    }
 
 }
