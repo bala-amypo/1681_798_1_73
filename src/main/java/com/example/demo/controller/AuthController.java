@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.exception.UnauthorizedException;
 import com.example.demo.model.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,14 +20,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String usernameOrEmail, @RequestParam String password) {
-        User user = usernameOrEmail.contains("@")
-                ? userService.findByEmail(usernameOrEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"))
-                : userService.findByUsername(usernameOrEmail).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        if (!user.getPassword().equals(password)) throw new UnauthorizedException("Invalid credentials");
-
-        return tokenProvider.generateToken(user.getId(), user.getEmail(),
-                user.getRoles().stream().map(r -> r.getName()).toList());
+    public ResponseEntity<String> login(@RequestParam String email) {
+        User user = userService.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        String token = tokenProvider.generateToken(user);
+        return ResponseEntity.ok(token);
     }
 }
