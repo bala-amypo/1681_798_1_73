@@ -30,6 +30,10 @@ public class WorkflowTemplate {
         return description;
     }
 
+    public String setDescription() {
+        this.description=description;
+    }
+
     public int getTotalLevels() {
         return totalLevels;
     }
