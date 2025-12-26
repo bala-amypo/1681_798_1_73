@@ -1,44 +1,51 @@
 package com.example.demo.security;
 
-import com.example.demo.model.User;
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class JwtTokenProvider {
 
-    @Value("${app.jwtSecret:SecretKey}")
+    @Value("${app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${app.jwtExpirationMs:86400000}") // 1 day
+    @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateToken(Long userId, String username, List<String> roles) {
+    public String generateToken(String username) {
         return Jwts.builder()
-                .setSubject(userId.toString())
-                .claim("username", username)
-                .claim("roles", roles)
+                .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-        return Long.parseLong(claims.getSubject());
-    }
-
-    public String getJwtFromRequest(javax.servlet.http.HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    public String resolveToken(HttpServletRequest request) {
+        String bearer = request.getHeader("Authorization");
+        if (bearer != null && bearer.startsWith("Bearer ")) {
+            return bearer.substring(7);
         }
         return null;
+    }
+
+    public String getUsername(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public Authentication getAuthentication(String token, UserDetails userDetails) {
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public boolean validateToken(String token) {
