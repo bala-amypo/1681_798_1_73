@@ -15,16 +15,22 @@ public class ApprovalActionController {
     public ApprovalActionController(ApprovalActionService service) {
         this.service = service;
     }
+
+    // CREATE
     @PostMapping
     public ApprovalAction create(@RequestBody ApprovalAction action) {
         return service.create(action);
     }
+
+    // GET BY LEVEL + ACTION
     @GetMapping("/{level}/{action}")
     public List<ApprovalAction> getByLevelAndAction(
             @PathVariable Integer level,
             @PathVariable String action) {
         return service.getByLevelAndAction(level, action);
     }
+
+    // GET BY REQUEST ID
     @GetMapping("/request/{requestId}")
     public List<ApprovalAction> getByRequest(@PathVariable Long requestId) {
         return service.getByRequestId(requestId);
