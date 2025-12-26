@@ -42,10 +42,13 @@ public class WorkflowTemplate {
         this.totalLevels = totalLevels;
     }
 
-    public boolean getActive() {   
+    public boolean getActive() {   // ⚠️ REQUIRED by tests
         return active;
     }
 
+    public boolean isActive() {
+        return active;
+    }
 
     public void setActive(boolean active) {
         this.active = active;
