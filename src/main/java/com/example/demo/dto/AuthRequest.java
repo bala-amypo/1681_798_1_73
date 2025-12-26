@@ -1,35 +1,19 @@
 package com.example.demo.dto;
 
 public class AuthRequest {
-
-    private String username;
+    private String usernameOrEmail;
     private String password;
 
-    public AuthRequest() {
-    }
+    public AuthRequest() {}
 
-    public AuthRequest(String username, String password) {
-        this.username = username;
+    public AuthRequest(String usernameOrEmail, String password) {
+        this.usernameOrEmail = usernameOrEmail;
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsernameOrEmail() { return usernameOrEmail; }
+    public void setUsernameOrEmail(String usernameOrEmail) { this.usernameOrEmail = usernameOrEmail; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public void setUsernameOrEmail(String value) {
-         this.username = value;
-    }
-
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }
