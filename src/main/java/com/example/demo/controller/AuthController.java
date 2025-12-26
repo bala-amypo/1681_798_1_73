@@ -2,55 +2,44 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
-import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterRequest request) {
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-
-        User savedUser = userService.registerUser(user, "ROLE_USER");
-
-        String token = jwtTokenProvider.generateToken(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList())
-        );
-
-        return ResponseEntity.ok(new AuthResponse(token));
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest request) {
-        User user = userService.registerUser(new User(), "ROLE_USER"); // Replace with actual auth logic
+    public AuthResponse login(@RequestBody AuthRequest request) {
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
 
-        String token = jwtTokenProvider.generateToken(
-                user.getId(),
-                user.getUsername(),
-                user.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList())
-        );
+            User user = userRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return ResponseEntity.ok(new AuthResponse(token));
+            String token = jwtTokenProvider.generateToken(user.getEmail());
+
+            return new AuthResponse(token);
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("Invalid login credentials");
+        }
     }
 }
