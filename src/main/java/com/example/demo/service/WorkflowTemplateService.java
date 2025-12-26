@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface WorkflowTemplateService {
 
-    WorkflowTemplate create(WorkflowTemplate template);
-    List<WorkflowTemplate> getAll();                     
+    WorkflowTemplate createTemplate(WorkflowTemplate template);
+
+    List<WorkflowTemplate> getAllTemplates();
+
     WorkflowTemplate getTemplateById(Long id);
-    WorkflowTemplate updateTemplate(Long id, WorkflowTemplate template);
-    WorkflowTemplate activateTemplate(Long id, boolean active);
 }
