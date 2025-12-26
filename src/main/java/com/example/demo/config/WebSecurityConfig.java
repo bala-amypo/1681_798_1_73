@@ -22,19 +22,22 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/h2-console/**").permitAll()
-                        .anyRequest().authenticated()
-                );
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/**", "/h2-console/**").permitAll()
+                .anyRequest().authenticated()
+            );
 
+        // Allow H2 console frames
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
+        // Add JWT filter
         http.addFilterBefore(
-                jwtAuthenticationFilter,
-                UsernamePasswordAuthenticationFilter.class
+            jwtAuthenticationFilter,
+            UsernamePasswordAuthenticationFilter.class
         );
 
         return http.build();
