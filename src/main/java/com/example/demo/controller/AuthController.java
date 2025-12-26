@@ -1,17 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,47 +11,29 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserService userService,
-                          JwtTokenProvider jwtTokenProvider,
-                          PasswordEncoder passwordEncoder) {
+    public AuthController(UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public User register(@RequestParam String email,
+                         @RequestParam String password,
+                         @RequestParam String role) {
+
         User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        userService.registerUser(user, request.getRole());
-
-        return ResponseEntity.ok("User registered");
+        user.setEmail(email);
+        user.setPassword(password);
+        return userService.registerUser(user, role);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest request) {
-        User user = userService.findByUsername(request.getUsernameOrEmail());
+    public String login(@RequestParam String email,
+                        @RequestParam String password) {
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
-        }
-
-        List<String> roles = user.getRoles()
-                .stream()
-                .map(Role::getName)
-                .toList();
-
-        String token = jwtTokenProvider.generateToken(
-                user.getId(),
-                user.getEmail(),
-                roles
-        );
-
-        return ResponseEntity.ok(token);
+        User user = userService.findByEmail(email);
+        if (user == null) throw new RuntimeException("Invalid credentials");
+        return jwtTokenProvider.generateToken(user);
     }
 }
