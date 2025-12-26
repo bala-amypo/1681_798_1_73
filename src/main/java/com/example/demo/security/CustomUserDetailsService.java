@@ -3,11 +3,8 @@ package com.example.demo.security;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
-
 import java.util.stream.Collectors;
 
 @Service
@@ -20,24 +17,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = userRepository.findAll()
-                .stream()
-                .filter(u ->
-                        u.getUsername().equals(username) ||
-                        u.getEmail().equals(username)
-                )
-                .findFirst()
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found")
-                );
+    public UserDetails loadUserByUsername(String input) throws UsernameNotFoundException {
+        // Optimized to find by username OR email directly
+        User user = userRepository.findByUsername(input)
+                .orElseGet(() -> userRepository.findByEmail(input)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found")));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getPassword(),
-                user.getRoles()
-                        .stream()
+                user.getPassword(), // This must be the hashed password from DB
+                user.getRoles().stream()
                         .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getName()))
                         .collect(Collectors.toSet())
         );
