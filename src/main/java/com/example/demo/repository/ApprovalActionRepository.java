@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
 
+@Repository
 public interface ApprovalActionRepository extends JpaRepository<ApprovalAction, Long> {
 
     List<ApprovalAction> findByLevelAndAction(Integer level, String action);
