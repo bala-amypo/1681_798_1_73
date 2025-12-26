@@ -1,27 +1,29 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.model.ApprovalRequest;
 import com.example.demo.repository.ApprovalRequestRepository;
+import com.example.demo.service.ApprovalRequestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class ApprovalRequestServiceImpl implements ApprovalRequestService {
 
-    private final ApprovalRequestRepository repository;
+    @Autowired
+    private ApprovalRequestRepository repository;
 
-    public ApprovalRequestServiceImpl(ApprovalRequestRepository repository) {
-        this.repository = repository;
-    }
-
-    public ApprovalRequest createRequest(ApprovalRequest request) {
+    @Override
+    public ApprovalRequest create(ApprovalRequest request) {
         return repository.save(request);
     }
 
-    public List<ApprovalRequest> getRequestsByRequester(long requesterId) {
+    @Override
+    public List<ApprovalRequest> getByRequester(Long requesterId) {
         return repository.findByRequesterId(requesterId);
     }
 
+    @Override
     public List<ApprovalRequest> getAllRequests() {
         return repository.findAll();
     }
