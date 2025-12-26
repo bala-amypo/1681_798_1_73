@@ -9,6 +9,8 @@ public interface WorkflowTemplateService {
 
     List<WorkflowTemplate> getAll();
 
+    WorkflowTemplate getTemplateById(Long id); // <-- add this
+
     WorkflowTemplate updateTemplate(Long id, WorkflowTemplate template);
 
     WorkflowTemplate activateTemplate(Long id, boolean active);
