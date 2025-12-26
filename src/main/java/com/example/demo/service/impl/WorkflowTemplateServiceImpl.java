@@ -11,9 +11,11 @@ import java.util.List;
 public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
 
     private final List<WorkflowTemplate> templates = new ArrayList<>();
+    private Long nextId = 1L;
 
     @Override
     public WorkflowTemplate create(WorkflowTemplate template) {
+        template.setId(nextId++);
         templates.add(template);
         return template;
     }
@@ -33,26 +35,18 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
 
     @Override
     public WorkflowTemplate updateTemplate(Long id, WorkflowTemplate updated) {
-        for (WorkflowTemplate t : templates) {
-            if (t.getId().equals(id)) {
-                t.setTemplateName(updated.getTemplateName());
-                t.setTotalLevels(updated.getTotalLevels());
-                t.setDescription(updated.getDescription());
-                t.setActive(updated.getActive());
-                return t;
-            }
-        }
-        throw new RuntimeException("Template not found with id: " + id);
+        WorkflowTemplate t = getTemplateById(id);
+        t.setTemplateName(updated.getTemplateName());
+        t.setTotalLevels(updated.getTotalLevels());
+        t.setDescription(updated.getDescription());
+        t.setActive(updated.getActive());
+        return t;
     }
 
     @Override
     public WorkflowTemplate activateTemplate(Long id, boolean active) {
-        for (WorkflowTemplate t : templates) {
-            if (t.getId().equals(id)) {
-                t.setActive(active);
-                return t;
-            }
-        }
-        throw new RuntimeException("Template not found with id: " + id);
+        WorkflowTemplate t = getTemplateById(id);
+        t.setActive(active);
+        return t;
     }
 }

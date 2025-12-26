@@ -8,34 +8,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/templates")
+@RequestMapping("/workflow")
 public class WorkflowTemplateController {
 
     @Autowired
     private WorkflowTemplateService service;
 
-    @PostMapping
-    public WorkflowTemplate createTemplate(@RequestBody WorkflowTemplate template) {
+    @PostMapping("/create")
+    public WorkflowTemplate create(@RequestBody WorkflowTemplate template) {
         return service.create(template);
     }
 
-    @GetMapping
-    public List<WorkflowTemplate> getAllTemplates() {
+    @GetMapping("/all")
+    public List<WorkflowTemplate> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public WorkflowTemplate getTemplateById(@PathVariable Long id) {
+    public WorkflowTemplate getById(@PathVariable Long id) {
         return service.getTemplateById(id);
     }
 
-    @PutMapping("/{id}")
-    public WorkflowTemplate updateTemplate(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
+    @PutMapping("/update/{id}")
+    public WorkflowTemplate update(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
         return service.updateTemplate(id, template);
     }
 
-    @PatchMapping("/{id}/activate")
-    public WorkflowTemplate activateTemplate(@PathVariable Long id, @RequestParam boolean active) {
+    @PutMapping("/activate/{id}")
+    public WorkflowTemplate activate(@PathVariable Long id, @RequestParam boolean active) {
         return service.activateTemplate(id, active);
     }
 }
