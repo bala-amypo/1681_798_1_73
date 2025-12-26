@@ -4,6 +4,10 @@ import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
 
 public interface UserService {
+
     User register(RegisterRequest request);
+
+    User registerUser(User user, String role);
+
     User findByUsername(String username);
 }

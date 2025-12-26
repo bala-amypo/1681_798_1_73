@@ -32,6 +32,11 @@ public class UserServiceImpl implements UserService {
         user.getRoles().add(role);
         return userRepository.save(user);
     }
+    public User registerUser(User user, String roleName) {
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
+    user.getRoles().add(roleRepository.findByName(roleName).orElse(null));
+    return userRepository.save(user);
+}
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);

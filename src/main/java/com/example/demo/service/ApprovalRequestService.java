@@ -4,6 +4,10 @@ import com.example.demo.model.ApprovalRequest;
 import java.util.List;
 
 public interface ApprovalRequestService {
-    ApprovalRequest create(ApprovalRequest request);
-    List<ApprovalRequest> getByRequester(Long requesterId);
+
+    ApprovalRequest createRequest(ApprovalRequest request);
+
+    List<ApprovalRequest> getRequestsByRequester(long requesterId);
+
+    List<ApprovalRequest> getAllRequests();
 }

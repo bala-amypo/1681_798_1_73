@@ -14,11 +14,15 @@ public class ApprovalRequestServiceImpl implements ApprovalRequestService {
         this.repository = repository;
     }
 
-    public ApprovalRequest create(ApprovalRequest request) {
+    public ApprovalRequest createRequest(ApprovalRequest request) {
         return repository.save(request);
     }
 
-    public List<ApprovalRequest> getByRequester(Long requesterId) {
+    public List<ApprovalRequest> getRequestsByRequester(long requesterId) {
         return repository.findByRequesterId(requesterId);
+    }
+
+    public List<ApprovalRequest> getAllRequests() {
+        return repository.findAll();
     }
 }
