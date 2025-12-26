@@ -22,6 +22,12 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
     public List<WorkflowTemplate> getAll() {
         return templates;
     }
+    @Override
+    public WorkflowTemplate getTemplateById(Long id) {
+         return templateRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Template not found with id: " + id));
+    }
+
 
     @Override
     public WorkflowTemplate updateTemplate(Long id, WorkflowTemplate updated) {
