@@ -12,20 +12,18 @@ import java.util.List;
 public class ApprovalRequestController {
 
     @Autowired
-    private ApprovalRequestService approvalRequestService;
+    private ApprovalRequestService requestService;
 
-    @PostMapping
-    public ApprovalRequest create(@RequestBody ApprovalRequest request) {
-        return approvalRequestService.createRequest(request);
+    @PostMapping("/")
+    public ApprovalRequest createRequest(@RequestBody ApprovalRequest request) {
+        return requestService.createRequest(request);
     }
 
-    @GetMapping
-    public List<ApprovalRequest> getAll() {
-        return approvalRequestService.getAllRequests();
-    }
-
-    @GetMapping("/requester/{requesterId}")
-    public List<ApprovalRequest> getByRequester(@PathVariable Long requesterId) {
-        return approvalRequestService.getRequestsByRequester(requesterId);
+    @GetMapping("/")
+    public List<ApprovalRequest> getAllRequests(@RequestParam(required = false) Long requesterId) {
+        if (requesterId != null) {
+            return requestService.getRequestsByRequester(requesterId);
+        }
+        return requestService.getAllRequests();
     }
 }
