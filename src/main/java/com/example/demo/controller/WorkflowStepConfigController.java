@@ -12,15 +12,15 @@ import java.util.List;
 public class WorkflowStepConfigController {
 
     @Autowired
-    private WorkflowStepConfigService workflowStepConfigService;
+    private WorkflowStepConfigService stepService;
 
-    @PostMapping
-    public WorkflowStepConfig create(@RequestBody WorkflowStepConfig step) {
-        return workflowStepConfigService.createStep(step);
+    @PostMapping("/")
+    public WorkflowStepConfig createStep(@RequestBody WorkflowStepConfig step) {
+        return stepService.createStep(step);
     }
 
     @GetMapping("/template/{templateId}")
-    public List<WorkflowStepConfig> getByTemplate(@PathVariable Long templateId) {
-        return workflowStepConfigService.getStepsByTemplate(templateId);
+    public List<WorkflowStepConfig> getStepsForTemplate(@PathVariable Long templateId) {
+        return stepService.getStepsForTemplate(templateId);
     }
 }
