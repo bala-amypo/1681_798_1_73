@@ -1,40 +1,41 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @Autowired
-    private RoleRepository roleRepository;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    @Override
     public User registerUser(User user, String roleName) {
+        user.setPassword(encoder.encode(user.getPassword()));
         Role role = roleRepository.findByName(roleName)
-                .orElseGet(() -> {
-                    Role r = new Role();
-                    r.setName(roleName);
-                    return roleRepository.save(r);
-                });
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+                .orElseGet(() -> roleRepository.save(createRole(roleName)));
         user.getRoles().add(role);
         return userRepository.save(user);
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseGet(() -> userRepository.findByEmail(username).orElseThrow());
+    private Role createRole(String name) {
+        Role role = new Role();
+        role.setName(name);
+        return role;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 }
