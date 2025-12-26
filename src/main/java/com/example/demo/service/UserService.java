@@ -1,13 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
 
+import java.util.Optional;
+
 public interface UserService {
-
-    User register(RegisterRequest request);
-
-    User registerUser(User user, String role);
-
-    User findByUsername(String username);
+    Optional<User> getByUsernameOrEmail(String usernameOrEmail);
+    boolean checkPassword(User user, String rawPassword);
+    User registerUser(User user, String rawPassword);
 }

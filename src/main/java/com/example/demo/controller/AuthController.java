@@ -1,10 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.RegisterRequest;
+import com.example.demo.exception.UnauthorizedException;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import com.example.demo.security.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,21 +13,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private UserService userService;
 
-    public AuthController(UserService userService, JwtTokenProvider jwtTokenProvider) {
-        this.userService = userService;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(userService.register(request));
-    }
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest request) {
-        return ResponseEntity.ok(jwtTokenProvider.generateToken(request.getUsername()));
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+        User user = userService.getByUsernameOrEmail(request.getUsernameOrEmail())
+                .orElseThrow(() -> new UnauthorizedException("Invalid username/email or password"));
+
+        boolean validPassword = userService.checkPassword(user, request.getPassword());
+        if (!validPassword) {
+            throw new UnauthorizedException("Invalid username/email or password");
+        }
+
+        String token = tokenProvider.generateToken(user);
+        return ResponseEntity.ok().body(token);
     }
 }
