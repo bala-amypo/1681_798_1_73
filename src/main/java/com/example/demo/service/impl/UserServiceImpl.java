@@ -1,41 +1,33 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
-import com.example.demo.model.Role;
 import com.example.demo.model.User;
-import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
     @Override
     public User registerUser(User user, String roleName) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        Role role = roleRepository.findByName(roleName)
-                .orElseGet(() -> roleRepository.save(createRole(roleName)));
-        user.getRoles().add(role);
         return userRepository.save(user);
     }
 
-    private Role createRole(String name) {
-        Role role = new Role();
-        role.setName(name);
-        return role;
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+    public Optional<User> findByUsernameOrEmail(String username, String email) {
+        return userRepository.findByUsernameOrEmail(username, email);
     }
 }
