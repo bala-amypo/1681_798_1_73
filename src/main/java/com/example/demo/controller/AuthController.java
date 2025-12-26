@@ -1,49 +1,40 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
-import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
+import com.example.demo.security.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
-    private final JwtTokenProvider tokenProvider;
+    @Autowired
+    private UserService userService;
 
-    public AuthController(UserService userService, JwtTokenProvider tokenProvider) {
-        this.userService = userService;
-        this.tokenProvider = tokenProvider;
-    }
-
-    @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request) {
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-
-        return userService.registerUser(user, request.getRole());
-    }
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthRequest request) {
-
-        User user = userService.findByEmail(request.getUsernameOrEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+    public String login(@RequestParam String email) {
+        User user = userService.findByEmail(email);
+        if (user == null) return "Invalid credentials";
 
         return tokenProvider.generateToken(
                 user.getId(),
                 user.getEmail(),
-                user.getRoles()
-                        .stream()
-                        .map(r -> r.getName())
-                        .collect(Collectors.toList())
+                user.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList())
         );
+    }
+
+    @PostMapping("/register")
+    public User register(@RequestParam String username,
+                         @RequestParam String email,
+                         @RequestParam String password,
+                         @RequestParam String roleName) {
+        User user = new User(username, email, password, null);
+        return userService.registerUser(user, roleName);
     }
 }
