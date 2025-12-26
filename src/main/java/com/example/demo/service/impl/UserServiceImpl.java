@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,31 +10,25 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public User registerUser(User user, String roleName) {
-        // HASH THE PASSWORD
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        
-        Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        user.getRoles().add(role);
-        
-        return userRepository.save(user);
+    public User findByUsername(String input) {
+        // This checks BOTH username and email columns
+        return userRepository.findByUsername(input)
+                .orElseGet(() -> userRepository.findByEmail(input)
+                .orElseThrow(() -> new RuntimeException("User not found: " + input)));
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseGet(() -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found")));
+    public User registerUser(User user, String roleName) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // ... add your role logic here ...
+        return userRepository.save(user);
     }
 }
