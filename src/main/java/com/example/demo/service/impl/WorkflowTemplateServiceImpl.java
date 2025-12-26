@@ -39,7 +39,8 @@ public class WorkflowTemplateServiceImpl implements WorkflowTemplateService {
         template.setTemplateName(updated.getTemplateName());
         template.setDescription(updated.getDescription());
         template.setTotalLevels(updated.getTotalLevels());
-        template.setActive(updated.isActive());
+        template.setActive(updated.getActive());
+
         return template;
     }
 
