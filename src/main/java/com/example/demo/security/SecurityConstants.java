@@ -1,9 +1,36 @@
 package com.example.demo.security;
 
-public class SecurityConstants {
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
 
-    public static final String AUTH_HEADER = "Authorization";
-    public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String SECRET_KEY = "demo-secret-key-demo-secret-key";
-    public static final long EXPIRATION_TIME = 86400000;
+import java.util.stream.Collectors;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String usernameOrEmail)
+            throws UsernameNotFoundException {
+
+        User user = userRepository.findByUsername(usernameOrEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                user.getRoles()
+                        .stream()
+                        .map(role -> new SimpleGrantedAuthority(role.getName()))
+                        .collect(Collectors.toSet())
+        );
+    }
 }
