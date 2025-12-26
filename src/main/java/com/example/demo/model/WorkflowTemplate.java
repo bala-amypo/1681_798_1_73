@@ -1,14 +1,5 @@
 package com.example.demo.model;
 
-public class WorkflowTemplate {
-    private Long id;
-    private String templateName;
-    private int totalLevels;
-    private String description;
-    private boolean active;
-
-    package com.example.demo.model;
-
 import jakarta.persistence.*;
 
 @Entity
