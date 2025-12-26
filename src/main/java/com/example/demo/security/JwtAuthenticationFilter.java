@@ -1,9 +1,6 @@
 package com.example.demo.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.demo.model.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,18 +8,27 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
+/**
+ * Minimal JWT filter that integrates with CustomUserDetailsService.
+ * You can expand the validateToken() method later with actual JWT logic.
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider tokenProvider;
     private final CustomUserDetailsService userDetailsService;
+    private final JwtTokenProvider tokenProvider;
 
-    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider,
-                                   CustomUserDetailsService userDetailsService) {
-        this.tokenProvider = tokenProvider;
+    public JwtAuthenticationFilter(CustomUserDetailsService userDetailsService,
+                                   JwtTokenProvider tokenProvider) {
         this.userDetailsService = userDetailsService;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
@@ -31,15 +37,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String header = request.getHeader(SecurityConstants.AUTH_HEADER);
+        String header = request.getHeader("Authorization");
 
-        if (header != null && header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
-            String token = header.substring(SecurityConstants.TOKEN_PREFIX.length());
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
 
-            if (tokenProvider.validateToken(token)) {
+            // Minimal placeholder: validateToken() should return true for now
+            if (tokenProvider != null && tokenProvider.validateToken(token)) {
                 String username = tokenProvider.getUsernameFromToken(token);
-                UserDetails userDetails =
-                        userDetailsService.loadUserByUsername(username);
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
