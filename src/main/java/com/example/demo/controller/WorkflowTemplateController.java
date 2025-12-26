@@ -14,28 +14,28 @@ public class WorkflowTemplateController {
     @Autowired
     private WorkflowTemplateService service;
 
-    @PostMapping("/create")
-    public WorkflowTemplate create(@RequestBody WorkflowTemplate template) {
+    @PostMapping
+    public WorkflowTemplate createTemplate(@RequestBody WorkflowTemplate template) {
         return service.create(template);
     }
 
-    @GetMapping("/all")
-    public List<WorkflowTemplate> getAll() {
+    @GetMapping
+    public List<WorkflowTemplate> getAllTemplates() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public WorkflowTemplate getById(@PathVariable Long id) {
-        return service.getTemplateById(id); // Make sure this method exists in the service
+    public WorkflowTemplate getTemplateById(@PathVariable Long id) {
+        return service.getTemplateById(id);
     }
 
-    @PutMapping("/update/{id}")
-    public WorkflowTemplate update(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
+    @PutMapping("/{id}")
+    public WorkflowTemplate updateTemplate(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
         return service.updateTemplate(id, template);
     }
 
-    @PutMapping("/activate/{id}")
-    public WorkflowTemplate activate(@PathVariable Long id, @RequestParam boolean active) {
+    @PatchMapping("/{id}/activate")
+    public WorkflowTemplate activateTemplate(@PathVariable Long id, @RequestParam boolean active) {
         return service.activateTemplate(id, active);
     }
 }

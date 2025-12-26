@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,19 +13,19 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String usernameOrEmail,
-                                        @RequestParam String password) {
-
-        User user = userService.getByUsernameOrEmail(usernameOrEmail); // returns User, not Optional
-
-        if (user != null) {
-            if (userService.checkPassword(user, password)) {
-                return ResponseEntity.ok("Login successful!");
-            } else {
-                return ResponseEntity.status(401).body("Invalid password");
-            }
-        } else {
-            return ResponseEntity.status(404).body("User not found");
+    public String login(@RequestParam String usernameOrEmail, @RequestParam String password) {
+        // Get user from service
+        User user = userService.getByUsernameOrEmail(usernameOrEmail);
+        if (user == null) {
+            throw new RuntimeException("User not found");
         }
+
+        // Check password
+        boolean valid = userService.checkPassword(user, password);
+        if (!valid) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return "Login successful for user: " + user.getUsername();
     }
 }
