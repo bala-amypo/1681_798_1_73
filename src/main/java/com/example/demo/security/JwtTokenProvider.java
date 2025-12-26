@@ -1,28 +1,20 @@
 package com.example.demo.security;
 
-import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
 
-    private static final String SECRET = "mysecretkeymysecretkeymysecretkey";
-    private static final long EXPIRATION = 86400000;
-    private final Key key;
-
-    public JwtTokenProvider() {
-        this.key = new SecretKeySpec(
-                SECRET.getBytes(),
-                SignatureAlgorithm.HS256.getJcaName()
-        );
-    }
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final long expirationMs = 3600000;
 
     public String generateToken(Long userId, String email, List<String> roles) {
         return Jwts.builder()
@@ -30,17 +22,28 @@ public class JwtTokenProvider {
                 .claim("userId", userId)
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
+                .signWith(key)
                 .compact();
     }
 
     public String generateToken(User user) {
         List<String> roles = user.getRoles()
                 .stream()
-                .map(Role::getName)
-                .toList();
+                .map(r -> r.getName())
+                .collect(Collectors.toList());
+
         return generateToken(user.getId(), user.getEmail(), roles);
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.get("userId", Long.class);
     }
 
     public boolean validateToken(String token) {
