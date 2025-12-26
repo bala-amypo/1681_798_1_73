@@ -1,6 +1,8 @@
 package com.example.demo.security;
 
-import com.example.demo.service.impl.CustomUserDetailsService;
+import com.example.demo.security.CustomUserDetailsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,8 @@ import java.io.IOException;
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtTokenProvider tokenProvider;
@@ -74,8 +78,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         } catch (Exception e) {
-            // Log the exception but don’t block the request; security context will be empty
-            logger.error("Cannot set user authentication: {}", e.getMessage());
+            // Proper logger usage
+            logger.error("Cannot set user authentication", e);
         }
 
         filterChain.doFilter(request, response);
