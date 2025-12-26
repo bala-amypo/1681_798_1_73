@@ -5,9 +5,7 @@ import java.util.List;
 
 public interface ApprovalRequestService {
 
-    ApprovalRequest createRequest(ApprovalRequest request);
-
-    List<ApprovalRequest> getRequestsByRequester(long requesterId);
-
+    ApprovalRequest create(ApprovalRequest request);      
+    List<ApprovalRequest> getByRequester(Long requesterId); 
     List<ApprovalRequest> getAllRequests();
 }
