@@ -1,13 +1,16 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
-import org.springframework.stereotype.Service;
+import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,25 +23,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user, String roleName) {
-        Role role = roleRepository.findByName(roleName);
-        if (role != null) {
-            user.getRoles().add(role);
-        }
+        Optional<Role> roleOpt = roleRepository.findByName(roleName);
+        Role role = roleOpt.orElseThrow(() -> new RuntimeException("Role not found"));
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        user.setRoles(roles);
         return userRepository.save(user);
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
