@@ -58,12 +58,17 @@ public class JwtTokenProvider {
                 .getBody();
 
         Object id = claims.get("userId");
-        if (id instanceof Integer) {
-            return ((Integer) id).longValue();
-        }
-        if (id instanceof Long) {
-            return (Long) id;
-        }
+        if (id instanceof Integer) return ((Integer) id).longValue();
+        if (id instanceof Long) return (Long) id;
         return null;
+    }
+
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
     }
 }
