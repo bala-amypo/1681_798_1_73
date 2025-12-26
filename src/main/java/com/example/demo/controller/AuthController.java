@@ -18,14 +18,22 @@ public class AuthController {
 
     @PostMapping("/login")
     public String login(@RequestParam String usernameOrEmail, @RequestParam String password) {
-        User user = userService.findByUsername(usernameOrEmail)
-                        .orElse(userService.findByEmail(usernameOrEmail)
-                        .orElseThrow(() -> new RuntimeException("User not found")));
+
+        User user;
+        if (usernameOrEmail.contains("@")) {
+            user = userService.findByEmail(usernameOrEmail);
+        } else {
+            user = userService.findByUsername(usernameOrEmail);
+        }
 
         if (!user.getPassword().equals(password)) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return tokenProvider.generateToken(user.getId(), user.getEmail(), user.getRoles().stream().map(r -> r.getName()).toList());
+        return tokenProvider.generateToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRoles().stream().map(r -> r.getName()).toList()
+        );
     }
 }
