@@ -2,8 +2,11 @@ package com.example.demo.repository;
 
 import com.example.demo.model.ApprovalAction;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
 
-public interface ApprovalActionRepository extends JpaRepository<ApprovalAction, Long> {
-    List<ApprovalAction> findByLevelNumberAndAction(Integer levelNumber, String action);
+import java.util.Optional;
+
+public interface ApprovalActionRepository
+        extends JpaRepository<ApprovalAction, Long> {
+
+    Optional<ApprovalAction> findByLevelAndAction(int level, String action);
 }
