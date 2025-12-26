@@ -7,7 +7,7 @@ public interface WorkflowTemplateService {
 
     WorkflowTemplate createTemplate(WorkflowTemplate template);
 
-    List<WorkflowTemplate> getAll();
+    List<WorkflowTemplate> getAllTemplates();
 
     WorkflowTemplate getTemplateById(Long id);
 
