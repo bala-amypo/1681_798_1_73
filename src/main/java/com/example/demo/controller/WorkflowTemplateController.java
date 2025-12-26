@@ -2,40 +2,47 @@ package com.example.demo.controller;
 
 import com.example.demo.model.WorkflowTemplate;
 import com.example.demo.service.WorkflowTemplateService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/workflow")
+@RequestMapping("/api/templates")
 public class WorkflowTemplateController {
 
-    @Autowired
-    private WorkflowTemplateService service;
+    private final WorkflowTemplateService service;
 
-    @PostMapping("/create")
-    public WorkflowTemplate createTemplate(@RequestBody WorkflowTemplate template) {
-        return service.create(template);
+    public WorkflowTemplateController(WorkflowTemplateService service) {
+        this.service = service;
     }
 
-    @GetMapping("/all")
+    @PostMapping
+    public WorkflowTemplate createTemplate(@RequestBody WorkflowTemplate template) {
+        return service.createTemplate(template); // ✅ FIXED
+    }
+
+    @GetMapping
     public List<WorkflowTemplate> getAllTemplates() {
-        return service.getAll();
+        return service.getAllTemplates(); // ✅ FIXED
     }
 
     @GetMapping("/{id}")
     public WorkflowTemplate getById(@PathVariable Long id) {
-        return service.getTemplateById(id);
+        return service.getTemplateById(id)
+                .orElseThrow(() -> new RuntimeException("Template not found")); // ✅ Optional handled
     }
 
-    @PutMapping("/update/{id}")
-    public WorkflowTemplate update(@PathVariable Long id, @RequestBody WorkflowTemplate template) {
+    @PutMapping("/{id}")
+    public WorkflowTemplate updateTemplate(
+            @PathVariable Long id,
+            @RequestBody WorkflowTemplate template) {
         return service.updateTemplate(id, template);
     }
 
-    @PutMapping("/activate/{id}")
-    public WorkflowTemplate activate(@PathVariable Long id, @RequestParam boolean active) {
+    @PutMapping("/{id}/activate")
+    public WorkflowTemplate activateTemplate(
+            @PathVariable Long id,
+            @RequestParam boolean active) {
         return service.activateTemplate(id, active);
     }
 }
