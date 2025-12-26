@@ -6,36 +6,30 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final List<User> users = new ArrayList<>();
-
-    @Override
-    public User getByUsernameOrEmail(String usernameOrEmail) {
-        return users.stream()
-                .filter(u -> u.getUsername().equals(usernameOrEmail) || u.getEmail().equals(usernameOrEmail))
-                .findFirst()
-                .orElse(null);
-    }
-
-    @Override
-    public boolean checkPassword(User user, String rawPassword) {
-        return user != null && user.getPassword().equals(rawPassword);
-    }
+    private Long nextId = 1L;
 
     @Override
     public User createUser(User user) {
+        user.setId(nextId++);
         users.add(user);
         return user;
     }
 
     @Override
-    public User findByUsername(String username) {
+    public Optional<User> getByUsernameOrEmail(String usernameOrEmail) {
         return users.stream()
-                .filter(u -> u.getUsername().equals(username))
-                .findFirst()
-                .orElse(null);
+                .filter(u -> u.getUsername().equals(usernameOrEmail) || u.getEmail().equals(usernameOrEmail))
+                .findFirst();
+    }
+
+    @Override
+    public boolean checkPassword(User user, String rawPassword) {
+        return user.getPassword().equals(rawPassword);
     }
 }
