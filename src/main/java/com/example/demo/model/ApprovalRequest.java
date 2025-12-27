@@ -3,22 +3,27 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "approval_requests")
+@Table(name = "approval_request")
 public class ApprovalRequest {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @Column(name = "template_id")
     private Long templateId;
+    
+    @Column(name = "requester_id")
     private Long requesterId;
+    
+    @Column(name = "request_title")
     private String requestTitle;
-
+    
     @Lob
+    @Column(name = "request_payload_json")
     private String requestPayloadJson;
-
-    private String status;
-    private Integer currentLevel;
+    
+    @Column(name = "status")
+    private String status = "PENDING";
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -32,19 +37,4 @@ public class ApprovalRequest {
     public void setRequestPayloadJson(String requestPayloadJson) { this.requestPayloadJson = requestPayloadJson; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-    public Integer getCurrentLevel() { return currentLevel; }
-    public void setCurrentLevel(Integer currentLevel) { this.currentLevel = currentLevel; }
-
-    public ApprovalRequest() {}
-
-    public ApprovalRequest(Long id, Long templateId, Long requesterId, String requestTitle,
-                           String requestPayloadJson, String status, Integer currentLevel) {
-        this.id = id;
-        this.templateId = templateId;
-        this.requesterId = requesterId;
-        this.requestTitle = requestTitle;
-        this.requestPayloadJson = requestPayloadJson;
-        this.status = status;
-        this.currentLevel = currentLevel;
-    }
 }

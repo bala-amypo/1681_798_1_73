@@ -3,16 +3,22 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "approval_actions")
+@Table(name = "approval_action")
 public class ApprovalAction {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @Column(name = "request_id")
     private Long requestId;
+    
+    @Column(name = "approver_id")
     private Long approverId;
+    
+    @Column(name = "level_number")
     private Integer levelNumber;
+    
+    @Column(name = "action")
     private String action;
 
     public Long getId() { return id; }
@@ -25,14 +31,4 @@ public class ApprovalAction {
     public void setLevelNumber(Integer levelNumber) { this.levelNumber = levelNumber; }
     public String getAction() { return action; }
     public void setAction(String action) { this.action = action; }
-
-    public ApprovalAction() {}
-
-    public ApprovalAction(Long id, Long requestId, Long approverId, Integer levelNumber, String action) {
-        this.id = id;
-        this.requestId = requestId;
-        this.approverId = approverId;
-        this.levelNumber = levelNumber;
-        this.action = action;
-    }
 }

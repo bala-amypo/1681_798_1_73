@@ -3,17 +3,19 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "audit_logs")
+@Table(name = "audit_log_record")
 public class AuditLogRecord {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @Column(name = "request_id")
     private Long requestId;
+    
+    @Column(name = "event_type")
     private String eventType;
-
-    @Lob
+    
+    @Column(name = "details")
     private String details;
 
     public Long getId() { return id; }
@@ -24,13 +26,4 @@ public class AuditLogRecord {
     public void setEventType(String eventType) { this.eventType = eventType; }
     public String getDetails() { return details; }
     public void setDetails(String details) { this.details = details; }
-
-    public AuditLogRecord() {}
-
-    public AuditLogRecord(Long id, Long requestId, String eventType, String details) {
-        this.id = id;
-        this.requestId = requestId;
-        this.eventType = eventType;
-        this.details = details;
-    }
 }
