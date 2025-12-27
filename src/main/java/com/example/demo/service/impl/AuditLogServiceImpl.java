@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 public class AuditLogServiceImpl implements AuditLogService {
-
+    @Autowired
     private final AuditLogRecordRepository repository;
 
     public AuditLogServiceImpl(AuditLogRecordRepository repository) {
