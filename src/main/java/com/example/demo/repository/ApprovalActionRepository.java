@@ -11,5 +11,7 @@ import java.util.List;
 public interface ApprovalActionRepository extends JpaRepository<ApprovalAction, Long> {
     
     @Query("SELECT a FROM ApprovalAction a WHERE a.levelNumber = :level AND a.action = :action")
-    List<ApprovalAction> findByLevelAndAction(@Param("level") Integer level, @Param("action") String action);
+    List<ApprovalAction> findByLevelAndAction(Integer level, String action);
+    List<ApprovalAction> findByRequestId(Long requestId);
+
 }

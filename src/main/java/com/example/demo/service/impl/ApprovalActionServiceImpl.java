@@ -1,3 +1,12 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.model.ApprovalAction;
+import com.example.demo.repository.ApprovalActionRepository;
+import com.example.demo.service.ApprovalActionService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class ApprovalActionServiceImpl implements ApprovalActionService {
 
