@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.model.AuditLogReord;
+import com.example.demo.model.AuditLogRecord;
 import java.util.List;
 
 public interface AuditLogService {
 
-    List<AuditLog> getByRequest(Long requestId);
+    AuditLogRecord logEvent(Long requestId, String eventType, String details);
+
+    List<AuditLogRecord> getLogsByRequestId(Long requestId);
 }

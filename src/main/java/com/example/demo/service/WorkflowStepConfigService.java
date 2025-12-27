@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface WorkflowStepConfigService {
 
-    WorkflowStepConfig create(WorkflowStepConfig config);
+    WorkflowStepConfig createStep(WorkflowStepConfig step);
 
-    List<WorkflowStepConfig> getByTemplate(Long templateId);
+    List<WorkflowStepConfig> getStepsForTemplate(Long templateId);
 }
