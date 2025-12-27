@@ -25,4 +25,4 @@ public class ApprovalRequestController {
     public List<ApprovalRequest> getByRequester(@PathVariable Long id) {
         return service.getRequestsByRequester(id); // ✅ FIXED
     }
-}
+}   
