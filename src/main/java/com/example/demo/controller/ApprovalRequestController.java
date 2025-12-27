@@ -10,19 +10,24 @@ import java.util.List;
 @RequestMapping("/api/requests")
 public class ApprovalRequestController {
 
-    private final ApprovalRequestService service;
+    private final ApprovalRequestService approvalRequestService;
 
-    public ApprovalRequestController(ApprovalRequestService service) {
-        this.service = service;
+    public ApprovalRequestController(ApprovalRequestService approvalRequestService) {
+        this.approvalRequestService = approvalRequestService;
     }
 
     @PostMapping
-    public ApprovalRequest create(@RequestBody ApprovalRequest request) {
-        return service.createRequest(request); // ✅ FIXED
+    public ApprovalRequest createRequest(@RequestBody ApprovalRequest request) {
+        return approvalRequestService.createRequest(request);
     }
 
-    @GetMapping("/requester/{id}")
-    public List<ApprovalRequest> getByRequester(@PathVariable Long id) {
-        return service.getRequestsByRequester(id); // ✅ FIXED
+    @GetMapping
+    public List<ApprovalRequest> getRequests(
+            @RequestParam(required = false) Long requesterId
+    ) {
+        if (requesterId != null) {
+            return approvalRequestService.getRequestsByRequester(requesterId);
+        }
+        return approvalRequestService.getAllRequests();
     }
-}   
+}
