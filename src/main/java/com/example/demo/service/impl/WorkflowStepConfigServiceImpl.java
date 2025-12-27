@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 public class WorkflowStepConfigServiceImpl implements WorkflowStepConfigService {
-
+    @Autowired
     private final WorkflowStepConfigRepository repository;
 
     public WorkflowStepConfigServiceImpl(WorkflowStepConfigRepository repository) {
