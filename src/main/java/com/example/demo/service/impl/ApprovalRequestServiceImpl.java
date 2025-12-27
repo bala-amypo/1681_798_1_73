@@ -9,22 +9,22 @@ import java.util.List;
 
 @Service
 public class ApprovalRequestServiceImpl implements ApprovalRequestService {
-
+    
     @Autowired
-    private ApprovalRequestRepository repository;
-
+    private ApprovalRequestRepository requestRepository;
+    
     @Override
     public ApprovalRequest createRequest(ApprovalRequest request) {
-        return repository.save(request);
+        return requestRepository.save(request);
     }
-
+    
     @Override
     public List<ApprovalRequest> getRequestsByRequester(Long requesterId) {
-        return repository.findByRequesterId(requesterId);
+        return requestRepository.findByRequesterId(requesterId);
     }
-
+    
     @Override
     public List<ApprovalRequest> getAllRequests() {
-        return repository.findAll();
+        return requestRepository.findAll();
     }
 }
